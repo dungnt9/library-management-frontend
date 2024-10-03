@@ -8,13 +8,13 @@ function BookBorrowComponent({ borrowOrders, onAdd, onEdit, onDelete, onReturnBo
   const [localError, setLocalError] = useState(null);
   const [readers, setReaders] = useState([]);
   const [books, setBooks] = useState([]);
-  const [selectedBooks, setSelectedBooks] = useState([{ book_id: '' }]);
+  const [selectedBooks, setSelectedBooks] = useState([{ book_id: '', return_date: '' }]);
   const [formData, setFormData] = useState({
     reader_id: '',
     order_date: new Date().toISOString().split('T')[0],
     books: []
   });
-  const [mode, setMode] = useState('add'); // 'add', 'edit', 'view', or 'return'
+  const [mode, setMode] = useState('add');
 
   useEffect(() => {
     fetchReaders();
@@ -43,7 +43,7 @@ function BookBorrowComponent({ borrowOrders, onAdd, onEdit, onDelete, onReturnBo
     setShowModal(false);
     setCurrentOrder(null);
     setLocalError(null);
-    setSelectedBooks([{ book_id: '' }]);
+    setSelectedBooks([{ book_id: '', return_date: '' }]);
     setFormData({
       reader_id: '',
       order_date: new Date().toISOString().split('T')[0],
@@ -52,20 +52,22 @@ function BookBorrowComponent({ borrowOrders, onAdd, onEdit, onDelete, onReturnBo
     setMode('add');
   };
 
+
   const handleShowModal = (order = null, mode = 'add') => {
     setMode(mode);
     setCurrentOrder(order);
     if (order) {
       setFormData({
         reader_id: order.reader_id,
-        order_date: order.order_date,
+        order_date: order.order_date ? new Date(order.order_date).toISOString().split('T')[0] : '',
         books: order.detailed_borrow_orders.map(detail => ({
           book_id: detail.book_id,
-          return_date: detail.return_date
+          return_date: detail.return_date ? new Date(detail.return_date).toISOString().split('T')[0] : ''
         }))
       });
       setSelectedBooks(order.detailed_borrow_orders.map(detail => ({
-        book_id: detail.book_id
+        book_id: detail.book_id,
+        return_date: detail.return_date ? new Date(detail.return_date).toISOString().split('T')[0] : ''
       })));
     } else {
       setFormData({
@@ -73,13 +75,13 @@ function BookBorrowComponent({ borrowOrders, onAdd, onEdit, onDelete, onReturnBo
         order_date: new Date().toISOString().split('T')[0],
         books: []
       });
-      setSelectedBooks([{ book_id: '' }]);
+      setSelectedBooks([{ book_id: '', return_date: '' }]);
     }
     setShowModal(true);
   };
 
   const handleAddBookField = () => {
-    setSelectedBooks([...selectedBooks, { book_id: '' }]);
+    setSelectedBooks([...selectedBooks, { book_id: '', return_date: '' }]);
   };
 
   const handleRemoveBookField = (index) => {
@@ -89,22 +91,45 @@ function BookBorrowComponent({ borrowOrders, onAdd, onEdit, onDelete, onReturnBo
 
   const handleBookSelect = (bookId, index) => {
     const updatedSelectedBooks = [...selectedBooks];
-    updatedSelectedBooks[index] = { book_id: bookId };
+    updatedSelectedBooks[index] = { ...updatedSelectedBooks[index], book_id: bookId };
+    setSelectedBooks(updatedSelectedBooks);
+  };
+
+  const handleReturnDateChange = (date, index) => {
+    const updatedSelectedBooks = [...selectedBooks];
+    updatedSelectedBooks[index] = { ...updatedSelectedBooks[index], return_date: date };
     setSelectedBooks(updatedSelectedBooks);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Validate that all required fields are filled
+      if (!formData.reader_id) {
+        throw new Error('Please select a reader');
+      }
+      
+      if (!formData.order_date) {
+        throw new Error('Please select an order date');
+      }
+      
+      if (selectedBooks.length === 0) {
+        throw new Error('Please add at least one book');
+      }
+      
+      // Validate each book entry
+      const invalidBooks = selectedBooks.filter(book => !book.book_id);
+      if (invalidBooks.length > 0) {
+        throw new Error('Please select all books');
+      }
+
       const orderData = {
         reader_id: parseInt(formData.reader_id),
         order_date: formData.order_date,
-        books: selectedBooks
-          .filter(book => book.book_id)
-          .map(book => ({
-            book_id: parseInt(book.book_id),
-            return_date: null
-          }))
+        books: selectedBooks.map(book => ({
+          book_id: parseInt(book.book_id),
+          return_date: book.return_date || null // Set null if return_date is empty
+        }))
       };
 
       if (mode === 'edit') {
@@ -156,7 +181,7 @@ function BookBorrowComponent({ borrowOrders, onAdd, onEdit, onDelete, onReturnBo
                 <td>{index + 1}</td>
                 <td>{order.order_id}</td>
                 <td>{order.reader?.name}</td>
-                <td>{new Date(order.order_date).toLocaleDateString()}</td>
+                <td>{order.order_date ? new Date(order.order_date).toLocaleDateString() : ''}</td>
                 <td>
                   <Button variant="info" onClick={() => handleShowModal(order, 'view')} className="me-2">
                     Xem chi tiết
@@ -259,6 +284,13 @@ function BookBorrowComponent({ borrowOrders, onAdd, onEdit, onDelete, onReturnBo
                         </option>
                       ))}
                     </Form.Select>
+                    <Form.Control
+                      type="date"
+                      value={book.return_date}
+                      onChange={(e) => handleReturnDateChange(e.target.value, index)}
+                      className="me-2"
+                      disabled={mode === 'view'}
+                    />
                     {mode !== 'view' && (
                       <Button
                         variant="danger"

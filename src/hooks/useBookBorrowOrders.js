@@ -27,8 +27,17 @@ function useBookBorrowOrders() {
   const addBorrowOrder = async (newOrder) => {
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:8000/api/borrow-orders', newOrder);
-      await fetchBorrowOrders();
+      // Ensure return_date is included for each book
+      const orderWithReturnDates = {
+        ...newOrder,
+        books: newOrder.books.map(book => ({
+          ...book,
+          return_date: book.return_date || null // Set null if return_date is empty
+        }))
+      };
+
+      const response = await axios.post('http://localhost:8000/api/borrow-orders', orderWithReturnDates);
+      await fetchBorrowOrders(); // Refresh the list after adding
       setError(null);
       return response.data;
     } catch (error) {
@@ -43,7 +52,7 @@ function useBookBorrowOrders() {
     setLoading(true);
     try {
       const response = await axios.put(`http://localhost:8000/api/borrow-orders/${updatedOrder.order_id}`, updatedOrder);
-      await fetchBorrowOrders();
+      await fetchBorrowOrders(); // Refresh the list after editing
       setError(null);
       return response.data;
     } catch (error) {
@@ -58,7 +67,7 @@ function useBookBorrowOrders() {
     setLoading(true);
     try {
       await axios.delete(`http://localhost:8000/api/borrow-orders/${id}`);
-      await fetchBorrowOrders();
+      await fetchBorrowOrders(); // Refresh the list after deleting
       setError(null);
     } catch (error) {
       console.error('Error deleting borrow order:', error);
@@ -71,9 +80,10 @@ function useBookBorrowOrders() {
   const returnBook = async (detailId) => {
     setLoading(true);
     try {
-      await axios.put(`http://localhost:8000/api/borrow-orders/${detailId}/return`);
-      await fetchBorrowOrders();
+      const response = await axios.put(`http://localhost:8000/api/borrow-orders/${detailId}/return`);
+      await fetchBorrowOrders(); // Refresh the list after returning
       setError(null);
+      return response.data;
     } catch (error) {
       console.error('Error returning book:', error);
       throw new Error(error.response?.data?.message || 'Failed to return book. Please try again.');
