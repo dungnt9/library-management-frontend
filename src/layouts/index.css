@@ -1,0 +1,10 @@
+.layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Layout có chiều cao ít nhất bằng 100% chiều cao trang */
+  }
+  
+  .content {
+    flex: 1; /* Phần này sẽ chiếm toàn bộ không gian giữa header và footer */
+  }
+  
