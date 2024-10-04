@@ -41,3 +41,29 @@ npm start
 ## API Integration
 
 This frontend application interacts with a backend API. Make sure to set up and run the backend server before using this frontend. The API base URL is currently set to `http://localhost:8000` in the custom hooks.
+
+## Demo Images
+
+### Home Page
+![Home Page](./demo_image/Trang_chu.png)
+
+### Book Management
+![Book Management](./demo_image/Quan_ly_sach.png)
+
+### Add Book
+![Add Book](./demo_image/Them_sach.png)
+
+### Reader Management
+![Reader Management](./demo_image/Quan_ly_ban_doc.png)
+
+### Add Reader
+![Add Reader](./demo_image/Them_ban_doc.png)
+
+### Borrow and Return Management
+![Borrow and Return Management](./demo_image/Quan_ly_muon_tra.png)
+
+### Add Borrow Request
+![Add Borrow Request](./demo_image/Them_don_muon_sach.png)
+
+### Return Book
+![Return Book](./demo_image/Tra_sach.png)
