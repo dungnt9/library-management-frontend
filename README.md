@@ -45,25 +45,25 @@ This frontend application interacts with a backend API. Make sure to set up and 
 ## Demo Images
 
 ### Home Page
-![Home Page](./demo_image/Trang_chu.png)
+![Home Page](./demo_image/Home_Page.png)
 
 ### Book Management
-![Book Management](./demo_image/Quan_ly_sach.png)
+![Book Management](./demo_image/Book_Management.png)
 
 ### Add Book
-![Add Book](./demo_image/Them_sach.png)
+![Add Book](./demo_image/Add_Book.png)
 
 ### Reader Management
-![Reader Management](./demo_image/Quan_ly_ban_doc.png)
+![Reader Management](./demo_image/Reader_Management.png)
 
 ### Add Reader
-![Add Reader](./demo_image/Them_ban_doc.png)
+![Add Reader](./demo_image/Add_Reader.png)
 
 ### Borrow and Return Management
-![Borrow and Return Management](./demo_image/Quan_ly_muon_tra.png)
+![Borrow and Return Management](./demo_image/Borrow_and_Return_Management.png)
 
 ### Add Borrow Request
-![Add Borrow Request](./demo_image/Them_don_muon_sach.png)
+![Add Borrow Request](./demo_image/Add_Borrow_Request.png)
 
 ### Return Book
-![Return Book](./demo_image/Tra_sach.png)
+![Return Book](./demo_image/Return_Book.png)
