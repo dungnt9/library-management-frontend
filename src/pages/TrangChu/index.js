@@ -16,7 +16,7 @@ function TrangChu() {
         <div className="col-md-6 mb-4">
           <div
             style={{
-              backgroundColor: '#D3E4C4',
+              backgroundColor: 'rgb(98, 196, 98)',
               padding: '20px',
               borderRadius: '10px',
               margin: '0 5px',
@@ -46,7 +46,7 @@ function TrangChu() {
         <div className="col-md-6 mb-4" style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <div
             style={{
-              backgroundColor: '#D3E4C4',
+              backgroundColor: 'rgb(98, 196, 98)',
               padding: '20px',
               borderRadius: '10px',
               margin: '0 5px',
