@@ -57,25 +57,26 @@ function BookBorrowComponent({ borrowOrders, onAdd, onEdit, onDelete, onReturnBo
     setMode(mode);
     setCurrentOrder(order);
     if (order) {
+      // Format dates and set initial form data for editing
+      const formattedDetailedOrders = order.detailed_borrow_orders.map(detail => ({
+        book_id: detail.book_id.toString(),
+        return_date: detail.return_date ? new Date(detail.return_date).toISOString().split('T')[0] : null
+      }));
+  
       setFormData({
-        reader_id: order.reader_id,
-        order_date: order.order_date ? new Date(order.order_date).toISOString().split('T')[0] : '',
-        books: order.detailed_borrow_orders.map(detail => ({
-          book_id: detail.book_id,
-          return_date: detail.return_date ? new Date(detail.return_date).toISOString().split('T')[0] : ''
-        }))
+        reader_id: order.reader_id.toString(),
+        order_date: new Date(order.order_date).toISOString().split('T')[0],
+        books: formattedDetailedOrders
       });
-      setSelectedBooks(order.detailed_borrow_orders.map(detail => ({
-        book_id: detail.book_id,
-        return_date: detail.return_date ? new Date(detail.return_date).toISOString().split('T')[0] : ''
-      })));
+      setSelectedBooks(formattedDetailedOrders);
     } else {
+      // Reset form for new order
       setFormData({
         reader_id: '',
         order_date: new Date().toISOString().split('T')[0],
         books: []
       });
-      setSelectedBooks([{ book_id: '', return_date: '' }]);
+      setSelectedBooks([{ book_id: '', return_date: null }]);
     }
     setShowModal(true);
   };
@@ -104,36 +105,38 @@ function BookBorrowComponent({ borrowOrders, onAdd, onEdit, onDelete, onReturnBo
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Validate that all required fields are filled
       if (!formData.reader_id) {
-        throw new Error('Please select a reader');
+        throw new Error('Vui lòng chọn bạn đọc');
       }
       
       if (!formData.order_date) {
-        throw new Error('Please select an order date');
+        throw new Error('Vui lòng chọn ngày mượn');
       }
       
       if (selectedBooks.length === 0) {
-        throw new Error('Please add at least one book');
+        throw new Error('Vui lòng thêm ít nhất một cuốn sách');
       }
       
-      // Validate each book entry
       const invalidBooks = selectedBooks.filter(book => !book.book_id);
       if (invalidBooks.length > 0) {
-        throw new Error('Please select all books');
+        throw new Error('Vui lòng chọn sách');
       }
-
+  
       const orderData = {
         reader_id: parseInt(formData.reader_id),
         order_date: formData.order_date,
         books: selectedBooks.map(book => ({
           book_id: parseInt(book.book_id),
-          return_date: book.return_date || null // Set null if return_date is empty
+          return_date: book.return_date || null
         }))
       };
-
-      if (mode === 'edit') {
-        await onEdit({ ...orderData, order_id: currentOrder.order_id });
+  
+      if (mode === 'edit' && currentOrder) {
+        const editData = {
+          ...orderData,
+          order_id: currentOrder.order_id
+        };
+        await onEdit(editData);
       } else {
         await onAdd(orderData);
       }
@@ -141,7 +144,7 @@ function BookBorrowComponent({ borrowOrders, onAdd, onEdit, onDelete, onReturnBo
     } catch (err) {
       setLocalError(err.message);
     }
-  };
+  };  
 
   const handleReturnBook = async (detailId) => {
     try {

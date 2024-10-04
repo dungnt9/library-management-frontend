@@ -24,20 +24,20 @@ function useBookBorrowOrders() {
     }
   };
 
+
   const addBorrowOrder = async (newOrder) => {
     setLoading(true);
     try {
-      // Ensure return_date is included for each book
       const orderWithReturnDates = {
         ...newOrder,
         books: newOrder.books.map(book => ({
-          ...book,
-          return_date: book.return_date || null // Set null if return_date is empty
+          book_id: book.book_id,
+          return_date: book.return_date || null // Cho phép null
         }))
       };
-
+  
       const response = await axios.post('http://localhost:8000/api/borrow-orders', orderWithReturnDates);
-      await fetchBorrowOrders(); // Refresh the list after adding
+      await fetchBorrowOrders();
       setError(null);
       return response.data;
     } catch (error) {
@@ -51,8 +51,22 @@ function useBookBorrowOrders() {
   const editBorrowOrder = async (updatedOrder) => {
     setLoading(true);
     try {
-      const response = await axios.put(`http://localhost:8000/api/borrow-orders/${updatedOrder.order_id}`, updatedOrder);
-      await fetchBorrowOrders(); // Refresh the list after editing
+      const formattedOrder = {
+        reader_id: parseInt(updatedOrder.reader_id),
+        order_date: updatedOrder.order_date,
+        books: updatedOrder.books.map(book => ({
+          book_id: parseInt(book.book_id),
+          return_date: book.return_date || null
+        }))
+      };
+  
+      const response = await axios.put(
+        `http://localhost:8000/api/borrow-orders/${updatedOrder.order_id}`, 
+        formattedOrder
+      );
+      
+      // Refresh the list after successful update
+      await fetchBorrowOrders();
       setError(null);
       return response.data;
     } catch (error) {
