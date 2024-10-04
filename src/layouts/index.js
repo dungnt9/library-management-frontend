@@ -9,7 +9,7 @@ function DefaultLayout(props) {
     <div className="layout">
       <Header />
       <Navigator />
-      <div className="content">
+      <div className="content" style={{backgroundColor:'rgb(178, 246, 174)'}}>
         {props.children}
       </div>
       <Footer />
