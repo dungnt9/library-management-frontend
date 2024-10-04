@@ -68,7 +68,8 @@ function useReaders() {
     setLoading(true);
     try {
       await axios.delete(`http://localhost:8000/api/readers/${id}`);
-      await fetchReaders(); // Refresh list after deleting
+      // Thay vì fetchReaders(), chúng ta sẽ cập nhật state trực tiếp
+      setReaders(prevReaders => prevReaders.filter(reader => reader.reader_id !== id));
       setError(null);
     } catch (error) {
       console.error('Error deleting reader:', error);

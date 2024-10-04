@@ -3,6 +3,7 @@ import { Table, Button, Modal, Form, Alert, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 
 function BookBorrowComponent({ borrowOrders, onAdd, onEdit, onDelete, onReturnBook, error, loading }) {
+  const [deleteMessage, setDeleteMessage] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [currentOrder, setCurrentOrder] = useState(null);
   const [localError, setLocalError] = useState(null);
@@ -155,6 +156,16 @@ function BookBorrowComponent({ borrowOrders, onAdd, onEdit, onDelete, onReturnBo
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await onDelete(id);
+      setDeleteMessage('Xóa thành công');
+      setTimeout(() => setDeleteMessage(''), 3000); // Ẩn thông báo sau 3 giây
+    } catch (error) {
+      setDeleteMessage('Xóa không thành công: ' + error.message);
+    }
+  };
+
   return (
     <>
       {error && <Alert variant="danger">{error}</Alert>}
@@ -195,7 +206,7 @@ function BookBorrowComponent({ borrowOrders, onAdd, onEdit, onDelete, onReturnBo
                   <Button variant="success" onClick={() => handleShowModal(order, 'return')} className="me-2">
                     Trả sách
                   </Button>
-                  <Button variant="danger" onClick={() => onDelete(order.order_id)}>
+                  <Button variant="danger" onClick={() => handleDelete(order.order_id)}>
                     Xóa
                   </Button>
                 </td>
@@ -326,6 +337,8 @@ function BookBorrowComponent({ borrowOrders, onAdd, onEdit, onDelete, onReturnBo
           </Form>
         </Modal.Body>
       </Modal>
+
+      {deleteMessage && <Alert variant="success">{deleteMessage}</Alert>}
     </>
   );
 }

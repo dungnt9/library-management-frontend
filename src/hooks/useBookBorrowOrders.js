@@ -81,7 +81,7 @@ function useBookBorrowOrders() {
     setLoading(true);
     try {
       await axios.delete(`http://localhost:8000/api/borrow-orders/${id}`);
-      await fetchBorrowOrders(); // Refresh the list after deleting
+      setBorrowOrders(prevOrders => prevOrders.filter(order => order.order_id !== id));
       setError(null);
     } catch (error) {
       console.error('Error deleting borrow order:', error);

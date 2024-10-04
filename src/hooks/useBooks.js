@@ -58,7 +58,7 @@ function useBooks() {
     setLoading(true);
     try {
       await axios.delete(`http://localhost:8000/api/books/${id}`);
-      await fetchBooks(); // Refresh list after deleting
+      setBooks(prevBooks => prevBooks.filter(book => book.book_id !== id));
       setError(null);
     } catch (error) {
       console.error('Error deleting book:', error);

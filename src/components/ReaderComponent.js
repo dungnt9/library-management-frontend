@@ -6,6 +6,7 @@ function ReaderComponent({ readers, onAdd, onEdit, onDelete, error, loading }) {
   const [currentReader, setCurrentReader] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [localError, setLocalError] = useState(null);
+  const [deleteMessage, setDeleteMessage] = useState('');
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -35,12 +36,24 @@ function ReaderComponent({ readers, onAdd, onEdit, onDelete, error, loading }) {
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await onDelete(id);
+      setDeleteMessage('Xóa thành công');
+      setTimeout(() => setDeleteMessage(''), 3000); // Ẩn thông báo sau 3 giây
+    } catch (error) {
+      setDeleteMessage('Xóa không thành công: ' + error.message);
+    }
+  };
+
   return (
     <>
       {error && <Alert variant="danger">{error}</Alert>}
+
       <Button variant="primary" onClick={() => handleShowModal()} className="mb-3">
         Thêm bạn đọc
       </Button>
+      
       {loading ? (
         <div className="text-center">
           <Spinner animation="border" role="status">
@@ -71,7 +84,7 @@ function ReaderComponent({ readers, onAdd, onEdit, onDelete, error, loading }) {
                   <Button variant="warning" onClick={() => handleShowModal(reader)} className="me-2">
                     Sửa
                   </Button>
-                  <Button variant="danger" onClick={() => onDelete(reader.reader_id)}>
+                  <Button variant="danger" onClick={() => handleDelete(reader.reader_id)}>
                     Xóa
                   </Button>
                 </td>
@@ -135,6 +148,8 @@ function ReaderComponent({ readers, onAdd, onEdit, onDelete, error, loading }) {
           </Form>
         </Modal.Body>
       </Modal>
+
+      {deleteMessage && <Alert variant="success">{deleteMessage}</Alert>}
     </>
   );
 }

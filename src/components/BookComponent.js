@@ -6,6 +6,7 @@ function BookComponent({ books, onAdd, onEdit, onDelete, error, loading }) {
   const [currentBook, setCurrentBook] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [localError, setLocalError] = useState(null);
+  const [deleteMessage, setDeleteMessage] = useState('');
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -32,6 +33,16 @@ function BookComponent({ books, onAdd, onEdit, onDelete, error, loading }) {
       handleCloseModal();
     } catch (err) {
       setLocalError(err.message || 'An error occurred. Please try again.');
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await onDelete(id);
+      setDeleteMessage('Xóa thành công');
+      setTimeout(() => setDeleteMessage(''), 3000); // Ẩn thông báo sau 3 giây
+    } catch (error) {
+      setDeleteMessage('Xóa không thành công: ' + error.message);
     }
   };
 
@@ -77,7 +88,7 @@ function BookComponent({ books, onAdd, onEdit, onDelete, error, loading }) {
                   <Button variant="warning" onClick={() => handleShowModal(book)} className="me-2">
                     Sửa
                   </Button>
-                  <Button variant="danger" onClick={() => onDelete(book.book_id)}>
+                  <Button variant="danger" onClick={() => handleDelete(book.book_id)}>
                     Xóa
                   </Button>
                 </td>
@@ -165,6 +176,8 @@ function BookComponent({ books, onAdd, onEdit, onDelete, error, loading }) {
           </Form>
         </Modal.Body>
       </Modal>
+
+      {deleteMessage && <Alert variant="success">{deleteMessage}</Alert>}
     </>
   );
 }
