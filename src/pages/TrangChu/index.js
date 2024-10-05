@@ -1,4 +1,3 @@
-//C:\Users\dung9\Desktop\front\src\pages\TrangChu\index.js
 import React from 'react';
 
 function TrangChu() {
@@ -50,7 +49,7 @@ function TrangChu() {
               padding: '20px',
               borderRadius: '10px',
               margin: '0 5px',
-              width: '375px', // 1/2 of 550px
+              width: '375px',
               marginRight: '20px',
               height: 'auto',
             }}

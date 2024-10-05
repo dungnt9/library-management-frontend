@@ -1,4 +1,3 @@
-//C:\Users\dung9\Desktop\front\src\layouts\DefaultLayout\Header.js
 import React from 'react';
 
 const Header = () => {

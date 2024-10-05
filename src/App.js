@@ -1,4 +1,3 @@
-//C:\Users\dung9\Desktop\front\src\App.js
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 

@@ -1,4 +1,3 @@
-//C:\Users\dung9\Desktop\front\src\layouts\Navigator.js
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
