@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Button, Form, Modal, Alert, Spinner } from 'react-bootstrap';
+import { Table, Button, Form, Modal, Alert } from 'react-bootstrap';
 
 function ReaderComponent({ readers, onAdd, onEdit, onDelete, error, loading }) {
   const [showModal, setShowModal] = useState(false);
@@ -56,9 +56,7 @@ function ReaderComponent({ readers, onAdd, onEdit, onDelete, error, loading }) {
       
       {loading ? (
         <div className="text-center">
-          <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner>
+          <h3>Loading...</h3>
         </div>
       ) : (
         <Table striped bordered hover>
@@ -137,9 +135,7 @@ function ReaderComponent({ readers, onAdd, onEdit, onDelete, error, loading }) {
               />
             </Form.Group>
             <Button variant="primary" type="submit" disabled={loading}>
-              {loading ? (
-                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
-              ) : isEditing ? (
+              {isEditing ? (
                 'Cập nhật'
               ) : (
                 'Thêm'

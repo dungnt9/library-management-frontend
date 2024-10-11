@@ -7,43 +7,28 @@ import QLSach from './pages/QLSach';
 import QLMuonTra from './pages/QLMuonTra';
 import DefaultLayout from './layouts/index.js';
 
+const routes = [
+  { path: '/', component: TrangChu },
+  { path: '/ql_ban_doc', component: QLBanDoc },
+  { path: '/ql_muon_tra', component: QLMuonTra },
+  { path: '/ql_sach', component: QLSach }
+];
+
 function App() {
   return (
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={
-              <DefaultLayout>
-                <TrangChu />
-              </DefaultLayout>
-            }
-          >
-            {' '}
-          </Route>
-          <Route path="/ql_ban_doc" element={
-              <DefaultLayout>
-                <QLBanDoc />
-              </DefaultLayout>
-            }
-          >
-            {' '}
-          </Route>
-          <Route path="/ql_muon_tra" element={
-              <DefaultLayout>
-                <QLMuonTra />
-              </DefaultLayout>
-            }
-          >
-            {' '}
-          </Route>
-          <Route path="/ql_sach" element={
-              <DefaultLayout>
-                <QLSach />
-              </DefaultLayout>
-            }
-          >
-            {' '}
-          </Route>
+          {routes.map(({ path, component: Component }) => (
+            <Route 
+              path={path} 
+              element={
+                <DefaultLayout>
+                  <Component />
+                </DefaultLayout>
+              } 
+            />
+          ))}
         </Routes>
       </div>
     </Router>

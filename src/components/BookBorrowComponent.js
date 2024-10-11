@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Alert, Spinner } from 'react-bootstrap';
+import { Table, Button, Modal, Form, Alert } from 'react-bootstrap';
 import axios from 'axios';
 
 function BookBorrowComponent({ borrowOrders, onAdd, onEdit, onDelete, onReturnBook, error, loading }) {
@@ -174,9 +174,7 @@ function BookBorrowComponent({ borrowOrders, onAdd, onEdit, onDelete, onReturnBo
       </Button>
       {loading ? (
         <div className="text-center">
-          <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner>
+          <h3>Loading...</h3>
         </div>
       ) : (
         <Table striped bordered hover>
