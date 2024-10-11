@@ -53,6 +53,8 @@ function ReaderComponent({ readers, onAdd, onEdit, onDelete, error, loading }) {
       <Button variant="primary" onClick={() => handleShowModal()} className="mb-3">
         Thêm bạn đọc
       </Button>
+
+      {deleteMessage && <Alert variant="success">{deleteMessage}</Alert>}
       
       {loading ? (
         <div className="text-center">
@@ -144,8 +146,6 @@ function ReaderComponent({ readers, onAdd, onEdit, onDelete, error, loading }) {
           </Form>
         </Modal.Body>
       </Modal>
-
-      {deleteMessage && <Alert variant="success">{deleteMessage}</Alert>}
     </>
   );
 }

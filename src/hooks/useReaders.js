@@ -6,80 +6,46 @@ function useReaders() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetchReaders();
-  }, []);
-
-  const fetchReaders = async () => {
+  const apiCall = async (method, url = '', data = null) => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:8000/api/readers');
-      setReaders(response.data);
-      setError(null);
-    } catch (error) {
-      console.error('Error fetching readers:', error);
-      setError('Failed to fetch readers. Please try again later.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const addReader = async (newReader) => {
-    setLoading(true);
-    try {
-      const response = await axios.post('http://localhost:8000/api/readers', {
-        name: newReader.name.trim(),
-        email: newReader.email.trim(),
-        phone_number: newReader.phone_number?.trim() || null,
-        address: newReader.address?.trim() || null
-      });
-      await fetchReaders(); // Refresh list after adding
+      const response = await axios[method](`http://localhost:8000/api/readers${url}`, data);
       setError(null);
       return response.data;
     } catch (error) {
-      console.error('Error adding reader:', error);
-      throw new Error(error.response?.data?.message || 'Failed to add reader. Please try again.');
+      const message = error.response?.data?.message || `Failed to ${method} reader. Please try again.`;
+      console.error(`Error ${method}ing reader:`, error);
+      throw new Error(message);
     } finally {
       setLoading(false);
     }
   };
 
-  const editReader = async (updatedReader) => {
-    setLoading(true);
-    try {
-      const response = await axios.put(`http://localhost:8000/api/readers/${updatedReader.reader_id}`, {
-        name: updatedReader.name.trim(),
-        email: updatedReader.email.trim(),
-        phone_number: updatedReader.phone_number?.trim() || null,
-        address: updatedReader.address?.trim() || null
-      });
-      await fetchReaders(); // Refresh list after editing
-      setError(null);
-      return response.data;
-    } catch (error) {
-      console.error('Error editing reader:', error);
-      throw new Error(error.response?.data?.message || 'Failed to edit reader. Please try again.');
-    } finally {
-      setLoading(false);
+  const prepareReaderData = (reader) => ({
+    name: reader.name.trim(),
+    email: reader.email.trim(),
+    phone_number: reader.phone_number?.trim() || null,
+    address: reader.address?.trim() || null
+  });
+
+  const fetchReaders = () => apiCall('get').then(setReaders);
+
+  useEffect(() => { fetchReaders(); }, []);
+
+  return {
+    readers,
+    error,
+    loading,
+    addReader: async (reader) => { 
+      await apiCall('post', '', prepareReaderData(reader)); return fetchReaders(); 
+    },
+    editReader: async (reader) => { 
+      await apiCall('put', `/${reader.reader_id}`, prepareReaderData(reader)); return fetchReaders(); 
+    },
+    deleteReader: async (id) => { 
+      await apiCall('delete', `/${id}`); setReaders(r => r.filter(reader => reader.reader_id !== id)); 
     }
   };
-
-  const deleteReader = async (id) => {
-    setLoading(true);
-    try {
-      await axios.delete(`http://localhost:8000/api/readers/${id}`);
-      // Thay vì fetchReaders(), cập nhật state trực tiếp
-      setReaders(prevReaders => prevReaders.filter(reader => reader.reader_id !== id));
-      setError(null);
-    } catch (error) {
-      console.error('Error deleting reader:', error);
-      throw new Error(error.response?.data?.message || 'Failed to delete reader. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { readers, addReader, editReader, deleteReader, error, loading };
 }
 
 export default useReaders;

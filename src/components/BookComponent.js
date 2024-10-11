@@ -52,6 +52,9 @@ function BookComponent({ books, onAdd, onEdit, onDelete, error, loading }) {
       <Button variant="primary" onClick={() => handleShowModal()} className="mb-3">
         Thêm sách
       </Button>
+
+      {deleteMessage && <Alert variant="success">{deleteMessage}</Alert>}
+      
       {loading ? (
         <div className="text-center">
           <h3>Loading...</h3>
@@ -172,8 +175,6 @@ function BookComponent({ books, onAdd, onEdit, onDelete, error, loading }) {
           </Form>
         </Modal.Body>
       </Modal>
-
-      {deleteMessage && <Alert variant="success">{deleteMessage}</Alert>}
     </>
   );
 }

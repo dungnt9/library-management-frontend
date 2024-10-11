@@ -21,6 +21,7 @@ function App() {
         <Routes>
           {routes.map(({ path, component: Component }) => (
             <Route 
+              key={path} 
               path={path} 
               element={
                 <DefaultLayout>

@@ -172,6 +172,9 @@ function BookBorrowComponent({ borrowOrders, onAdd, onEdit, onDelete, onReturnBo
       <Button variant="primary" onClick={() => handleShowModal(null, 'add')} className="mb-3">
         Thêm đơn mượn sách
       </Button>
+
+      {deleteMessage && <Alert variant="success">{deleteMessage}</Alert>}
+      
       {loading ? (
         <div className="text-center">
           <h3>Loading...</h3>
@@ -336,7 +339,6 @@ function BookBorrowComponent({ borrowOrders, onAdd, onEdit, onDelete, onReturnBo
         </Modal.Body>
       </Modal>
 
-      {deleteMessage && <Alert variant="success">{deleteMessage}</Alert>}
     </>
   );
 }
