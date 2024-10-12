@@ -11,17 +11,12 @@ function BorrowOrderModal({ show, onHide, mode, currentOrder, readers, books, on
 
   useEffect(() => {
     if (currentOrder && (mode === 'edit' || mode === 'view')) {
-      const formattedDetailedOrders = currentOrder.detailed_borrow_orders.map(detail => ({
-        book_id: detail.book_id.toString(),
-        return_date: detail.return_date ? new Date(detail.return_date).toISOString().split('T')[0] : null
-      }));
-
       setFormData({
-        reader_id: currentOrder.reader_id.toString(),
-        order_date: new Date(currentOrder.order_date).toISOString().split('T')[0],
-        books: formattedDetailedOrders
+        reader_id: currentOrder.reader_id,
+        order_date: currentOrder.order_date,
+        books: currentOrder.detailed_borrow_orders
       });
-      setSelectedBooks(formattedDetailedOrders);
+      setSelectedBooks(currentOrder.detailed_borrow_orders);
     } else {
       setFormData({
         reader_id: '',
