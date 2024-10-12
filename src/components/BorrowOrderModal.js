@@ -35,18 +35,18 @@ function BorrowOrderModal({ show, onHide, mode, currentOrder, readers, books, on
   const handleAddBookField = () => {
     setSelectedBooks([...selectedBooks, { book_id: '', return_date: '' }]);
   };
-
+  //xóa 1 sách khỏi sách mượn, tạo mảng mới mà không có phần tử tại chỉ số index
   const handleRemoveBookField = (index) => {
     const updatedBooks = selectedBooks.filter((_, i) => i !== index);
     setSelectedBooks(updatedBooks);
   };
-
+  // tạo bản sao của mảng selectedBooks, cập nhật ID của sách tại vị trí đã chỉ định, và sau đó lưu lại mảng
   const handleBookSelect = (bookId, index) => {
     const updatedSelectedBooks = [...selectedBooks];
     updatedSelectedBooks[index] = { ...updatedSelectedBooks[index], book_id: bookId };
     setSelectedBooks(updatedSelectedBooks);
   };
-
+  
   const handleReturnDateChange = (date, index) => {
     const updatedSelectedBooks = [...selectedBooks];
     updatedSelectedBooks[index] = { ...updatedSelectedBooks[index], return_date: date };
