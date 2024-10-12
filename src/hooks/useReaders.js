@@ -21,8 +21,8 @@ function useReaders() {
     }
   };
 
-  const prepareReaderData = (reader) => ({
-    name: reader.name.trim(),
+  const prepareReaderData = (reader) => ({       //chuẩn hóa dữ liệu
+    name: reader.name.trim(),   //loại bỏ khoảng trắng ở đầu và cuối chuỗi
     email: reader.email.trim(),
     phone_number: reader.phone_number?.trim() || null,
     address: reader.address?.trim() || null

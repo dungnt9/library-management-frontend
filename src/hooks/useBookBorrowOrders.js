@@ -11,7 +11,7 @@ function useBookBorrowOrders() {
   const fetchBorrowOrders = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get(API_URL);
+      const { data } = await axios.get(API_URL);   // kiểu destructuring cũng tốt, thay vì response.data
       setBorrowOrders(data);
       setError(null);
     } catch (error) {
@@ -43,8 +43,8 @@ function useBookBorrowOrders() {
 
   const addBorrowOrder = (newOrder) => {
     const orderWithReturnDates = {
-      ...newOrder,
-      books: newOrder.books.map(book => ({
+      ...newOrder,        //Spread Operator: copy thuộc tính từ đối tượng newOrder vào đối tượng orderWithReturnDates.
+      books: newOrder.books.map(book => ({      //xử lý thuộc tính books
         book_id: book.book_id,
         return_date: book.return_date || null
       }))
@@ -53,8 +53,8 @@ function useBookBorrowOrders() {
   };
 
   const editBorrowOrder = (updatedOrder) => {
-    const formattedOrder = {
-      reader_id: parseInt(updatedOrder.reader_id),
+    const formattedOrder = {               //định dạng lại dữ liệu
+      reader_id: parseInt(updatedOrder.reader_id),    //chuyển string sang số nguyên
       order_date: updatedOrder.order_date,
       books: updatedOrder.books.map(book => ({
         book_id: parseInt(book.book_id),

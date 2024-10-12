@@ -40,7 +40,7 @@ function ReaderComponent({ readers, onAdd, onEdit, onDelete, error, loading }) {
     try {
       await onDelete(id);
       setDeleteMessage('Xóa thành công');
-      setTimeout(() => setDeleteMessage(''), 3000); // Ẩn thông báo sau 3 giây
+      setTimeout(() => setDeleteMessage(''), 5000);
     } catch (error) {
       setDeleteMessage('Xóa không thành công: ' + error.message);
     }
@@ -99,7 +99,9 @@ function ReaderComponent({ readers, onAdd, onEdit, onDelete, error, loading }) {
           <Modal.Title>{isEditing ? 'Sửa bạn đọc' : 'Thêm bạn đọc'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+
           {localError && <Alert variant="danger">{localError}</Alert>}
+
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
               <Form.Label>Tên</Form.Label>

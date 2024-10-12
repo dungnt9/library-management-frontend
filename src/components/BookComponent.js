@@ -17,16 +17,16 @@ function BookComponent({ books, onAdd, onEdit, onDelete, error, loading }) {
 
   const handleShowModal = (book = {}) => {
     setCurrentBook(book);
-    setIsEditing(!!book.book_id);
+    setIsEditing(!!book.book_id); //nếu có thì set(true)
     setShowModal(true);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {  // e là tham số cho sự kiện event, được kích hoạt khi gửi form
+    e.preventDefault(); // ngăn trang web reload, tránh mất state hiện tại
     setLocalError(null);
     try {
       if (isEditing) {
-        await onEdit(currentBook);
+        await onEdit(currentBook);      //thông qua hook useBooks
       } else {
         await onAdd(currentBook);
       }
@@ -40,7 +40,7 @@ function BookComponent({ books, onAdd, onEdit, onDelete, error, loading }) {
     try {
       await onDelete(id);
       setDeleteMessage('Xóa thành công');
-      setTimeout(() => setDeleteMessage(''), 3000); // Ẩn thông báo sau 3 giây
+      setTimeout(() => setDeleteMessage(''), 5000);
     } catch (error) {
       setDeleteMessage('Xóa không thành công: ' + error.message);
     }
@@ -49,11 +49,12 @@ function BookComponent({ books, onAdd, onEdit, onDelete, error, loading }) {
   return (
     <>
       {error && <Alert variant="danger">{error}</Alert>}
+
       <Button variant="primary" onClick={() => handleShowModal()} className="mb-3">
         Thêm sách
       </Button>
 
-      {deleteMessage && <Alert variant="success">{deleteMessage}</Alert>}
+      {deleteMessage && <Alert variant="success">{deleteMessage}</Alert>}   {/*deleteMessage có giá trị truthy (tức là không phải null, undefined, hay chuỗi rỗng)*/}
       
       {loading ? (
         <div className="text-center">
@@ -86,7 +87,7 @@ function BookComponent({ books, onAdd, onEdit, onDelete, error, loading }) {
                 <td>{book.quantity}</td>
                 <td>{book.is_available ? 'Có sẵn' : 'Không có sẵn'}</td>
                 <td>
-                  <Button variant="warning" onClick={() => handleShowModal(book)} className="me-2">
+                  <Button variant="warning" onClick={() => handleShowModal(book)} className="me-2"> {/*margin-end: thêm khoảng cách bên phải*/}
                     Sửa
                   </Button>
                   <Button variant="danger" onClick={() => handleDelete(book.book_id)}>
@@ -104,15 +105,19 @@ function BookComponent({ books, onAdd, onEdit, onDelete, error, loading }) {
           <Modal.Title>{isEditing ? 'Sửa sách' : 'Thêm sách'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          
           {localError && <Alert variant="danger">{localError}</Alert>}
+
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
               <Form.Label>Tiêu đề</Form.Label>
               <Form.Control
                 type="text"
                 value={currentBook.title || ''}
-                onChange={(e) => setCurrentBook({ ...currentBook, title: e.target.value })}
+                onChange={(e) => setCurrentBook({ ...currentBook, title: e.target.value })} 
+                // giữ nguyên các thuộc tính hiện tại của currentBook và  cập nhật thuộc tính title với giá trị mới từ input
                 required
+                // thuộc tính của input, yêu cầu phải nhập.
               />
             </Form.Group>
             <Form.Group className="mb-3">
